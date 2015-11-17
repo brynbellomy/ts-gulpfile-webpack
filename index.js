@@ -4,6 +4,7 @@ var webpack = require('webpack')
 var WebpackDevServer = require('webpack-dev-server')
 var webpackConfig = require('../webpack.config.js')
 
+require('ts-gulpfile-typescript')
 
 
 exports.registerTasks = () => {
@@ -14,7 +15,7 @@ exports.registerTasks = () => {
         gulp.watch(['src/**/*'], ['webpack:build-dev'])
     })
 
-    gulp.task('webpack:build', done => {
+    gulp.task('webpack:build', ['ts:check-tsconfig'], done => {
         var myConfig = Object.create(webpackConfig)
 
         myConfig.plugins = (myConfig.plugins || []).concat(
