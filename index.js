@@ -7,7 +7,11 @@ var webpackConfig = require('../webpack.config.js')
 require('ts-gulpfile-typescript')
 
 
-exports.registerTasks = () => {
+exports.registerTasks = (opts) => {
+    let options = {
+        webpackConfig: opts.webpackConfig || {},
+    }
+
     // Build and watch cycle
     // Advantage: No server required, can run app from filesystem
     // Disadvantage: Requests are not blocked until bundle is available; can serve an old app on refresh.
@@ -16,7 +20,7 @@ exports.registerTasks = () => {
     })
 
     gulp.task('webpack:build', ['ts:check-tsconfig'], done => {
-        var myConfig = Object.create(webpackConfig)
+        var myConfig = Object.create(options.webpackConfig)
 
         myConfig.plugins = (myConfig.plugins || []).concat(
             new webpack.SourceMapDevToolPlugin({
@@ -59,7 +63,7 @@ exports.registerTasks = () => {
 
 
     // modify some webpack config options
-    var myDevConfig = Object.create(webpackConfig)
+    var myDevConfig = Object.create(options.webpackConfig)
     myDevConfig.devtool = 'sourcemap'
     myDevConfig.debug = true
 
@@ -80,7 +84,7 @@ exports.registerTasks = () => {
 
     gulp.task('webpack:dev-server', callback => {
         // modify some webpack config options
-        var myConfig = Object.create(webpackConfig)
+        var myConfig = Object.create(options.webpackConfig)
         myConfig.devtool = 'sourcemap'
         myConfig.debug = true
 
