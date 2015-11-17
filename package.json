@@ -8,10 +8,11 @@
   "peerDependencies": {
     "gulp": "^3.9.0",
     "gulp-util": "^3.0.7",
-    "ts-gulpfile-typescript": "^1.0.0"
+    "ts-gulpfile-typescript": "^1.0.0",
+    "ts-loader": "^0.7.1"
   },
   "dependencies": {
-    "ts-loader": "^0.7.1",
+    "object-assign": "^4.0.1",
     "webpack": "^1.12.6",
     "webpack-dev-server": "^1.12.1"
   }
