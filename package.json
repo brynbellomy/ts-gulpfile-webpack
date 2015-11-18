@@ -8,7 +8,6 @@
   "peerDependencies": {
     "gulp": "^3.9.0",
     "gulp-util": "^3.0.7",
-    "ts-gulpfile-typescript": "^1.1.0",
     "ts-loader": "^0.7.1"
   },
   "dependencies": {

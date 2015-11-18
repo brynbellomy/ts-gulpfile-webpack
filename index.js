@@ -5,8 +5,7 @@ var gutil = require('gulp-util')
 var webpack = require('webpack')
 var WebpackDevServer = require('webpack-dev-server')
 var assign = require('object-assign')
-
-require('ts-gulpfile-typescript')
+var path = require('path')
 
 
 exports.buildDev = (taskName, opts) => {
@@ -40,36 +39,22 @@ exports.buildProd = (taskName, opts) => {
     }
 }
 
-exports.devServer = (opts) => {
-    const options = {
-        mangle: opts.mangle || false,
-        debug: opts.debug || true,
-        sourcemaps: opts.sourcemaps || true,
-        webpackConfig: opts.webpackConfig || {},
-    }
+exports.devServer = (webpackConfig) => {
+    webpackConfig = webpackConfig || {}
+    webpackConfig.debug = true
+    webpackConfig.devtool = 'sourcemap'
 
-    return (callback) => {
-        // modify some webpack config options
-        var myConfig = assign({}, options.webpackConfig)
-        if (options.sourcemaps) {
-            myConfig.devtool = 'sourcemap'
-        }
-        if (options.debug) {
-            myConfig.debug = true
-        }
+    const devServerOptions = (webpackConfig.tsGulpfile || {}).devServer || {}
+    const host = devServerOptions.host || 'localhost'
+    const port = devServerOptions.port || 8001
 
-        // Start a webpack-dev-server
-        new WebpackDevServer(webpack(myConfig), {
-            quiet: false,
-            noInfo: false,
-            publicPath: 'http://localhost:8001/' + myConfig.output.publicPath,
-            filename: "all-ts.js",
-            stats: { colors: true }
-        }).listen(8001, 'localhost', err => {
-            if(err) throw new gutil.PluginError('webpack-dev-server', err)
-            gutil.log('[webpack-dev-server]', 'http://localhost:8001/webpack-dev-server/index.html')
-        })
-    }
+    const compiler = webpack(webpackConfig)
+    const server = new WebpackDevServer(compiler, devServerOptions)
+
+    server.listen(port, host, err => {
+        if(err) throw new gutil.PluginError('webpack-dev-server', err)
+        gutil.log('[webpack-dev-server]', path.join(`http://${host}:${port}`, 'webpack-dev-server/index.html'))
+    })
 }
 
 function runCompiler(compiler, taskName, options, done) {
@@ -125,26 +110,3 @@ function createProdCompiler(options) {
 
 
 
-//     // Build and watch cycle
-//     // Advantage: No server required, can run app from filesystem
-//     // Disadvantage: Requests are not blocked until bundle is available; can serve an old app on refresh.
-//     gulp.task('webpack:watch:dev', ['webpack:build:dev'], exports.watchDev)
-//     gulp.task('webpack:build:prod', ['ts:check-tsconfig'], exports.buildProd)
-
-//     gulp.task('webpack:build:dev', exports.buildDev)
-
-//     gulp.task('webpack:dev-server', callback => {
-//         // modify some webpack config options
-//         var myConfig = assign({}, options.webpackConfig)
-//         myConfig.devtool = 'sourcemap'
-//         myConfig.debug = true
-
-//         // Start a webpack-dev-server
-//         new WebpackDevServer(webpack(myConfig), {
-//             publicPath: '/' + myConfig.output.publicPath,
-//             stats: { colors: true }
-//         }).listen(8001, 'localhost', err => {
-//             if(err) throw new gutil.PluginError('webpack-dev-server', err)
-//             gutil.log('[webpack-dev-server]', 'http://localhost:8001/webpack-dev-server/index.html')
-//         })
-//     })
