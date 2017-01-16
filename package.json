@@ -1,6 +1,6 @@
 {
   "name": "ts-gulpfile-webpack",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "",
   "main": "index.js",
   "author": "bryn austin bellomy <bryn.bellomy@gmail.com>",
@@ -8,7 +8,7 @@
   "peerDependencies": {
     "gulp": "^3.9.0",
     "gulp-util": "^3.0.7",
-    "ts-loader": "^1.3.3"
+    "ts-loader": "^0.7.1"
   },
   "dependencies": {
     "object-assign": "^4.0.1",
